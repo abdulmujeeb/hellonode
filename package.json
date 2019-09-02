@@ -6,8 +6,9 @@
   "scripts": {
     "test": "mocha './test/**/*.spec.js'",
     "start": "node app.js",
-    "autostart": "DEBUG=app nodemon app.js",
-    "lint": "eslint app.js test/**/*.spec.js"
+    "build":"echo 'hello build'",
+    "lint": "eslint app.js",
+    "debugstart": "DEBUG=app nodemon app.js"
   },
   "repository": {
     "type": "git",

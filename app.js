@@ -8,6 +8,8 @@ const Calculator = require('./src/util/calculator');
 
 const port = process.env.PORT || 3000;
 
+var userpwd = "User@12345";
+
 app.use(morgan('tiny'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')));
