@@ -8,6 +8,9 @@ variables:
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
 
+  # Docker Image Name
+  dockerImageName: 'abdulmujeeb/hellonode:latest'
+
 stages:
 - stage: Build
   displayName: Build stage
@@ -28,10 +31,16 @@ stages:
         npm run build --if-present
       displayName: 'npm install, build and test'
 
-
     - script: |
         npm run test --if-present --reporter mocha-junit-reporter
       displayName: 'Run Mocha Tests'
+
+    - task: Docker@2
+      displayName: Build Docker Image
+      inputs:
+        repository: $(dockerImageName)
+        command: build
+        Dockerfile: Dockerfile
 
     - task: ArchiveFiles@2
       displayName: 'Archive files'
