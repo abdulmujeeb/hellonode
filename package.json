@@ -1,0 +1,52 @@
+{
+  "name": "hellonode",
+  "version": "1.0.0",
+  "description": "Node JS Express Application for learning ",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "autostart": "DEBUG=app nodemon app.js",
+    "lint": "eslint app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abdulmujeeb/hellonode.git"
+  },
+  "author": "Abdul Mujeeb",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abdulmujeeb/hellonode/issues"
+  },
+  "homepage": "https://github.com/abdulmujeeb/hellonode#readme",
+  "dependencies": {
+    "babel": "6.23.0",
+    "bootstrap": "4.3.1",
+    "chai": "4.2.0",
+    "chalk": "2.4.2",
+    "debug": "4.1.1",
+    "ejs": "2.6.2",
+    "express": "4.17.1",
+    "jquery": "3.4.1",
+    "mocha": "6.2.0",
+    "morgan": "1.9.1",
+    "nodemon": "1.19.1",
+    "popper": "1.0.1"
+  },
+  "devDependencies": {
+    "eslint": "6.3.0",
+    "eslint-config-airbnb-base": "14.0.0",
+    "eslint-plugin-import": "2.18.2"
+  },
+  "nodemonConfig": {
+    "restartable": "rs",
+    "ignore": [
+      "node_modules/**/node_modules"
+    ],
+    "delay": "2500",
+    "env": {
+      "NODE_ENV": "development",
+      "PORT": 4000
+    }
+  }
+}
