@@ -4,10 +4,10 @@
   "description": "Node JS Express Application for learning ",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha './test/**/*.spec.js'",
     "start": "node app.js",
     "autostart": "DEBUG=app nodemon app.js",
-    "lint": "eslint app.js"
+    "lint": "eslint app.js test/**/*.spec.js"
   },
   "repository": {
     "type": "git",
@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/abdulmujeeb/hellonode#readme",
   "dependencies": {
-    "babel": "6.23.0",
     "bootstrap": "4.3.1",
     "chai": "4.2.0",
     "chalk": "2.4.2",

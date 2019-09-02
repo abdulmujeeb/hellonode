@@ -22,12 +22,13 @@ app.get('/', (req, res) => {
 	var a = req.query.a;
 	var b = req.query.b;
 
-	var calculator = new Calculator(a,b);
-
-	// var sum = calculator.add(a,b);
-	// var diff = calculator.subtract(a, b);
-	// var mul = calculator.multiply(a, b);
-	var division = calculator.division(a, b);
+	if(!isNaN(a) && !isNaN(b))
+	{
+		var calculator = new Calculator(a,b);
+		console.log(a);
+		console.log(b);
+		var division = calculator.division();
+	}
 
   //res.sendFile(path.join(__dirname, 'views', 'index.html'));
   res.render('index', { title: 'Azure Enthusiasts', result: division});
