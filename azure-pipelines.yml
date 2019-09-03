@@ -32,13 +32,11 @@ stages:
       displayName: 'npm install, build and test'
 
     - task: SonarCloudPrepare@1
-      displayName: "Run SAST using SonarCloud"
       inputs:
         SonarCloud: 'node-sast-scan'
-        organization: '$(organization)'
-        projectKey: '$(projectKey)'
-        projectName: '$(projectName)'
-        projectVersion: '$(Build.BuildNumber)'
+        organization: 'mjborg'
+        scannerMode: 'CLI'
+        configMode: 'file'
 
     - task: SonarCloudAnalyze@1
       displayName: 'Run SonarCloud code analysis'
