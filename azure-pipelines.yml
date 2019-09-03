@@ -40,6 +40,12 @@ stages:
         projectName: '$(projectName)'
         projectVersion: '$(Build.BuildNumber)'
 
+    - task: SonarCloudAnalyze@1
+      displayName: 'Run SonarCloud code analysis'
+
+    - task: SonarCloudPublish@1
+      displayName: 'Publish SonarCloud quality gate results'
+
     - script: |
         npm run test --if-present --reporter mocha-junit-reporter
       displayName: 'Run Mocha Tests'
@@ -50,12 +56,6 @@ stages:
         repository: $(dockerImageName)
         command: build
         Dockerfile: Dockerfile
-
-    - task: SonarCloudAnalyze@1
-      displayName: 'Run SonarCloud code analysis'
-
-    - task: SonarCloudPublish@1
-      displayName: 'Publish SonarCloud quality gate results'
 
     - task: ArchiveFiles@2
       displayName: 'Archive files'
