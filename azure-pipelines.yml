@@ -35,12 +35,13 @@ stages:
       inputs:
         SonarCloud: 'node-sast-scan'
         organization: 'mjborg'
-        scannerMode: 'CLI'
-        configMode: 'file'
+        scannerMode: 'MSBuild'
+        projectKey: 'node-sast-scan'
+        projectName: 'node-sast-scan'
 
     - task: SonarCloudAnalyze@1
       displayName: 'Run SonarCloud code analysis'
-
+    
     - task: SonarCloudPublish@1
       displayName: 'Publish SonarCloud quality gate results'
 
