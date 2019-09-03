@@ -31,6 +31,15 @@ stages:
         npm run build --if-present
       displayName: 'npm install, build and test'
 
+    - task: SonarCloudPrepare@1
+      displayName: "Run SAST using SonarCloud"
+      inputs:
+        SonarCloud: ""
+        organization: '$(organization)'
+        projectKey: '$(projectKey)'
+        projectName: '$(projectName)'
+        projectVersion: '$(Build.BuildNumber)'
+
     - script: |
         npm run test --if-present --reporter mocha-junit-reporter
       displayName: 'Run Mocha Tests'
@@ -41,6 +50,12 @@ stages:
         repository: $(dockerImageName)
         command: build
         Dockerfile: Dockerfile
+
+    - task: SonarCloudAnalyze@1
+      displayName: 'Run SonarCloud code analysis'
+
+    - task: SonarCloudPublish@1
+      displayName: 'Publish SonarCloud quality gate results'
 
     - task: ArchiveFiles@2
       displayName: 'Archive files'
