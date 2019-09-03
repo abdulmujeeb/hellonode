@@ -34,7 +34,7 @@ stages:
     - task: SonarCloudPrepare@1
       displayName: "Run SAST using SonarCloud"
       inputs:
-        SonarCloud: "SonarCloud NodeCode Scan"
+        SonarCloud: 'SonarCloud NodeCode Scan'
         organization: '$(organization)'
         projectKey: '$(projectKey)'
         projectName: '$(projectName)'
