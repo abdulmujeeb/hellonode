@@ -9,7 +9,7 @@ variables:
   vmImageName: 'ubuntu-latest'
 
   # Docker Image Name
-  dockerImageName: 'abdulmujeeb/hellonode:latest'
+  dockerImageName: 'abdulmujeeb/hellonode'
 
 stages:
 - stage: Build
