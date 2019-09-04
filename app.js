@@ -3,12 +3,14 @@ const chalk = require('chalk');
 const morgan = require('morgan');
 const path = require('path');
 const app = express();
+const cors = require('cors');
+
+app.use(cors());
+//app.options('*', cors()) // include before other routes
 
 const Calculator = require('./src/util/calculator');
 
 const port = process.env.PORT || 3000;
-
-var userpwd = "User@12345";
 
 app.use(morgan('tiny'));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -17,6 +19,9 @@ app.use('/js', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/
 app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist')));
 app.set('views', './src/views');
 app.set('view engine', 'ejs');
+
+// Store some value locally
+window.localStorage.setItem("token", "123456");
 
 
 app.get('/', (req, res) => {
