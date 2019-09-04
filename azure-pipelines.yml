@@ -31,37 +31,37 @@ stages:
         npm run build --if-present
       displayName: 'npm install, build and test'
 
-#    - task: SonarCloudPrepare@1
-#      inputs:
-#        SonarCloud: 'node-sast-scan'
-#        organization: 'mjborg'
-#        scannerMode: 'CLI'
-#        configMode: 'manual'
-#        cliProjectKey: 'node-sast-scan'
-#        cliProjectName: 'node-sast-scan'
-#        cliSources: '.'
+    - task: SonarCloudPrepare@1
+      inputs:
+        SonarCloud: 'node-sast-scan'
+        organization: 'mjborg'
+        scannerMode: 'CLI'
+        configMode: 'manual'
+        cliProjectKey: 'node-sast-scan'
+        cliProjectName: 'node-sast-scan'
+        cliSources: '.'
 
-#    - task: SonarCloudAnalyze@1
-#      displayName: 'Run SonarCloud code analysis'
+    - task: SonarCloudAnalyze@1
+      displayName: 'Run SonarCloud code analysis'
     
-#    - task: SonarCloudPublish@1
-#      displayName: 'Publish SonarCloud quality gate results'
+    - task: SonarCloudPublish@1
+      displayName: 'Publish SonarCloud quality gate results'
 
-#    - script: |
-#        npm run test --if-present --reporter mocha-junit-reporter
-#      displayName: 'Run Mocha Tests'
+    - script: |
+        npm run test --if-present --reporter mocha-junit-reporter
+      displayName: 'Run Mocha Tests'
 
-#    - task: Docker@2
-#      displayName: Build Docker Image
-#      inputs:
-#        repository: $(dockerImageName)
-#        command: build
-#        Dockerfile: Dockerfile
-#        tags: latest
+    - task: Docker@2
+      displayName: Build Docker Image
+      inputs:
+        repository: $(dockerImageName)
+        command: build
+        Dockerfile: Dockerfile
+        tags: latest
       
-#    - script: |
-#        curl -s https://ci-tools.anchore.io/inline_scan-v0.4.1 | bash -s -- -p -r $(dockerImageName)
-#      displayName: 'Scan Docker Image for Vulnerabilities'
+    - script: |
+        curl -s https://ci-tools.anchore.io/inline_scan-v0.4.1 | bash -s -- -p -r $(dockerImageName)
+      displayName: 'Scan Docker Image for Vulnerabilities'
 
     - task: WhiteSource Bolt@19
       displayName: "Run OSS Scan using Whitesource Bolt"
