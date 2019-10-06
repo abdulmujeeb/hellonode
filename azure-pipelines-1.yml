@@ -8,7 +8,10 @@ trigger:
 
 variables:
   vmImageName: 'ubuntu-latest'
-  dockerImageName: 'abdulmujeeb/hellonode'
+  dockerImageName: 'abdulmujeeb/hellonodecode'
+  tag: v1
+  containerRegistry: 'Azure Registry'
+
 
 steps:
 
@@ -19,12 +22,18 @@ steps:
 #      containerRegistry: acr_connection_1
 
   - task: Docker@2
+    displayName: Login to ACR 
+    inputs:
+      command: login
+      containerRegistry: $(containerRegistry)
+
+  - task: Docker@2
     displayName: Build Docker Image
     inputs:
         repository: $(dockerImageName)
         command: build
         Dockerfile: Dockerfile
-        tags: latest
+        tags: $(tag)
 
   - task: Docker@2
     displayName: Build Docker Image
@@ -32,8 +41,8 @@ steps:
         repository: $(dockerImageName)
         command: push
         Dockerfile: Dockerfile
-        containerRegistry: 'Azure Registry'
-        tags: latest
+        containerRegistry: $(containerRegistry)
+        tags: $(tag)
     
 
 
