@@ -1,0 +1,108 @@
+# Build and Deploy a Node.JS Express App
+
+trigger:
+- master
+
+variables:
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+  # Docker Image Name
+  dockerImageName: 'abdulmujeeb/hellonode'
+
+stages:
+- stage: Build
+  displayName: Build stage
+  pool:
+    vmImage: $(vmImageName)
+  jobs:
+  - job: BuildCode
+    displayName: Build Code 
+    # pool:
+      # vmImage: $(vmImageName)
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '10.x'
+      displayName: 'Install Node.js'
+
+    - script: |
+        npm install
+        npm run build --if-present
+      displayName: 'npm install, build and test'
+
+    - script: |
+        npm run test --if-present --reporter mocha-junit-reporter
+      displayName: 'Run Mocha Unit Tests'
+
+  - job: BuildContainer
+    displayName: Build Docker Image 
+    dependsOn: 
+      - BuildCode
+    steps:
+      - task: Docker@2
+        displayName: Build Docker Image
+        inputs:
+          repository: $(dockerImageName)
+          command: build
+          Dockerfile: Dockerfile
+          tags: latest
+
+  - job: StaticScan
+    displayName: Security Scan
+    dependsOn: 
+      - BuildCode
+    pool:
+      vmImage: $(vmImageName)
+
+    steps:
+      - task: SonarCloudPrepare@1
+        inputs:
+          SonarCloud: 'node-sast-scan'
+          organization: 'mjborg'
+          scannerMode: 'CLI'
+          configMode: 'manual'
+          cliProjectKey: 'node-sast-scan'
+          cliProjectName: 'node-sast-scan'
+          cliSources: '.'
+      - task: SonarCloudAnalyze@1
+        displayName: 'Run SonarCloud code analysis'    
+      - task: SonarCloudPublish@1
+        displayName: 'Publish SonarCloud quality gate results'
+
+  - job: OpenSourceScan
+    displayName: Open Source Scan 
+    dependsOn:
+      - BuildCode
+    steps:
+      - task: WhiteSource Bolt@19
+        displayName: "Run OSS Scan using Whitesource Bolt"
+
+  - job: ContainerScan
+    displayName: Static Container Scanning 
+    dependsOn:
+      - BuildContainer
+    steps:
+      - script: |
+          curl -s https://ci-tools.anchore.io/inline_scan-v0.4.1 | bash -s -- -p -r $(dockerImageName)
+        displayName: 'Scan Docker Image for Vulnerabilities'
+
+  - job: GenerateArtifacts
+    displayName: Generate Artifacts
+    dependsOn:
+      - BuildCode
+      - StaticScan
+      - OpenSourceScan
+    
+    steps:
+      - task: ArchiveFiles@2
+        displayName: 'Archive files'
+        inputs:
+          rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+          includeRootFolder: false
+          archiveType: zip
+          archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+          replaceExistingArchive: true
+      - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+        artifact: drop
