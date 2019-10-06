@@ -48,7 +48,9 @@ stages:
         displayName: Build Docker Image
         inputs:
           repository: $(dockerImageName)
-          command: build
+          containerRegistry: |
+            $(containerRegistry)
+          command: buildAndPush
           Dockerfile: Dockerfile
           tags: latest
 
@@ -63,9 +65,7 @@ stages:
             $(containerRegistry)
           repository: $(dockerImageName)
           command: push
-          tags: latest
-
-      
+          tags: latest      
 
   - job: SASTScan
     displayName: SAST Scan
