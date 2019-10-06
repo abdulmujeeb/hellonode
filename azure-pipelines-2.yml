@@ -11,6 +11,9 @@ variables:
   # Docker Image Name
   dockerImageName: 'abdulmujeeb/hellonodecode'
 
+  # Container Registry
+  containerRegistry: 'Azure Registry'
+
 stages:
 - stage: Build
   displayName: Build stage
@@ -57,10 +60,12 @@ stages:
         displayName: Push Docker Image 
         inputs:
           containerRegistry: |
-            $(azurecontainerregistry)
+            $(containerRegistry)
           repository: $(dockerImageName)
           command: push
           tags: latest
+
+      
 
   - job: SASTScan
     displayName: SAST Scan
