@@ -49,8 +49,8 @@ stages:
           Dockerfile: Dockerfile
           tags: latest
 
-  - job: StaticScan
-    displayName: Security Scan
+  - job: SASTScan
+    displayName: SAST Scan
     dependsOn: 
       - BuildCode
     pool:
