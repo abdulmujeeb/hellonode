@@ -33,7 +33,9 @@ steps:
         repository: $(dockerImageName)
         command: build
         Dockerfile: Dockerfile
-        tags: $(tag) | $(Build.BuildId)
+        tags: |
+          $(tag) 
+          $(Build.BuildId)
 
   - task: Docker@2
     displayName: Build Docker Image
@@ -42,7 +44,8 @@ steps:
         command: push
         Dockerfile: Dockerfile
         containerRegistry: $(containerRegistry)
-        tags: $(tag) | $(Build.BuildId)
+        tags: |
+          $(tag) $(Build.BuildId)
     
 
 
