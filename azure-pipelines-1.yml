@@ -38,14 +38,15 @@ steps:
           $(Build.BuildId)
 
   - task: Docker@2
-    displayName: Build Docker Image
+    displayName: Push Docker Image
     inputs:
         repository: $(dockerImageName)
         command: push
         Dockerfile: Dockerfile
         containerRegistry: $(containerRegistry)
         tags: |
-          $(tag) $(Build.BuildId)
+          $(tag) 
+          $(Build.BuildId)
     
 
 
