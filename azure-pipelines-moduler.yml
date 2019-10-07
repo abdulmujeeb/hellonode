@@ -9,14 +9,14 @@ variables:
   vmImageName: 'ubuntu-latest'
 
   # Docker Image Name
-  dockerImageName: 'abdulmujeeb/hellonodecode'
+  dockerImageName: 'hellonodecode'
 
   # Container Registry
   containerRegistry: 'Azure Registry'
 
-  # Docker Image Tag 
+  # Docker Image Tag
   tag: v1
-  
+
 stages:
 - stage: Build
   displayName: Build stage
@@ -24,7 +24,7 @@ stages:
     vmImage: $(vmImageName)
   jobs:
   - job: BuildCode
-    displayName: Build Code 
+    displayName: Build Code
     # pool:
       # vmImage: $(vmImageName)
     steps:
@@ -44,11 +44,11 @@ stages:
 
   - job: BuildContainer
     displayName: Build Scan and Push Docker Image
-    dependsOn: 
+    dependsOn:
       - BuildCode
     steps:
       - task: Docker@2
-        displayName: Login to ACR 
+        displayName: Login to ACR
         inputs:
           command: login
           containerRegistry: $(containerRegistry)
@@ -66,17 +66,17 @@ stages:
         displayName: 'Scan Docker Image for Vulnerabilities'
 
       - task: Docker@2
-        displayName: Push Docker Image 
+        displayName: Push Docker Image
         inputs:
           containerRegistry: |
             $(containerRegistry)
           repository: $(dockerImageName)
           command: push
-          tags: $(tag)      
+          tags: $(tag)
 
   - job: SASTScan
     displayName: SAST Scan
-    dependsOn: 
+    dependsOn:
       - BuildCode
     pool:
       vmImage: $(vmImageName)
@@ -92,12 +92,12 @@ stages:
           cliProjectName: 'node-sast-scan'
           cliSources: '.'
       - task: SonarCloudAnalyze@1
-        displayName: 'Run SonarCloud code analysis'    
+        displayName: 'Run SonarCloud code analysis'
       - task: SonarCloudPublish@1
         displayName: 'Publish SonarCloud quality gate results'
 
   - job: OpenSourceScan
-    displayName: Open Source Scan 
+    displayName: Open Source Scan
     dependsOn:
       - BuildCode
     steps:
@@ -105,7 +105,7 @@ stages:
         displayName: "Run OSS Scan using Whitesource Bolt"
 
   - job: ContainerScan
-    displayName: Static Container Scanning 
+    displayName: Static Container Scanning
     dependsOn:
       - BuildContainer
     steps:
@@ -119,7 +119,7 @@ stages:
       - BuildCode
       - SASTScan
       - OpenSourceScan
-    
+
     steps:
       - task: ArchiveFiles@2
         displayName: 'Archive files'
