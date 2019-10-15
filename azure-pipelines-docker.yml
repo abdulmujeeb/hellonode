@@ -10,8 +10,8 @@ variables:
   vmImageName: 'ubuntu-latest'
   dockerImageName: 'hellonodecode'
   tag: v1
+  dockerImageNameWithTag: $(dockerImageName):$(tag)
   containerRegistry: 'Azure Registry'
-
 
 steps:
 
@@ -24,14 +24,13 @@ steps:
   - task: Docker@2
     displayName: Build Docker Image
     inputs:
-        repository: $(dockerImageName)
+        repository: $(dockerImageNameWithTag)
         command: build
         Dockerfile: Dockerfile
-        tags: |
-          $(tag)
+        
 
   - script: |
-        curl -s https://ci-tools.anchore.io/inline_scan-v0.4.1 | bash -s -- -r -d Dockerfile $(dockerImageName)
+        curl -s https://ci-tools.anchore.io/inline_scan-v0.4.1 | bash -s -- -r -d Dockerfile $(dockerImageNameWithTag)
     displayName: 'Scan Docker Image for Vulnerabilities'
 
   - task: Docker@2
@@ -43,13 +42,11 @@ steps:
   - task: Docker@2
     displayName: Push Docker Image
     inputs:
-        repository: $(dockerImageName)
+        repository: $(dockerImageNameWithTag)
         command: push
         Dockerfile: Dockerfile
         containerRegistry: $(containerRegistry)
-        tags: |
-          $(tag)
-
+        
   - task: CopyFiles@2
     displayName: Copy Anchore Scan Reports 
     inputs:
