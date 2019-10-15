@@ -31,6 +31,7 @@ steps:
     displayName: Build Docker Image
     inputs:
         repository: $(dockerImageName)
+        containerRegistry: $(containerRegistry)
         command: build
         Dockerfile: Dockerfile
         tags: |
