@@ -8,7 +8,7 @@ trigger:
 
 variables:
   vmImageName: 'ubuntu-latest'
-  dockerImageName: 'nodeapp/hellonodecode'
+  dockerImageName: 'hellonodecode'
   tag: v1
   containerRegistry: 'Azure Registry'
 
