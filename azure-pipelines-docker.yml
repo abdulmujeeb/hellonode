@@ -36,6 +36,11 @@ steps:
         tags: |
           $(tag)
 
+  - script: |
+        curl -s https://ci-tools.anchore.io/inline_scan-v0.4.1 | bash -s -- -p -r $(dockerImageName):$(tag)
+    displayName: 'Scan Docker Image for Vulnerabilities'
+
+
   - task: Docker@2
     displayName: Push Docker Image
     inputs:
@@ -45,10 +50,6 @@ steps:
         containerRegistry: $(containerRegistry)
         tags: |
           $(tag)
-
-#  - script: |
-#        curl -s https://ci-tools.anchore.io/inline_scan-v0.4.1 | bash -s -- -p -r $(dockerImageName)
-#    displayName: 'Scan Docker Image for Vulnerabilities'
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish the project -- Release'
