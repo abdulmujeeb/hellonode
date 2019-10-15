@@ -37,7 +37,7 @@ steps:
           $(tag)
 
   - script: |
-        curl -s https://ci-tools.anchore.io/inline_scan-v0.4.1 | bash -s -- -r $(dockerImageName):$(tag)
+        curl -s https://ci-tools.anchore.io/inline_scan-v0.4.1 | bash -s -- -r -d Dockerfile $(dockerImageName):$(tag)
     displayName: 'Scan Docker Image for Vulnerabilities'
 
 
@@ -51,10 +51,16 @@ steps:
         tags: |
           $(tag)
 
-  - task: PublishBuildArtifacts@1
-    displayName: 'Publish the project -- Release'
+  - task: CopyFiles@2
+    displayName: Copy Anchore Scan Reports 
     inputs:
-      PathtoPublish: '$(System.DefaultWorkingDirectory)'
+      SourceFolder: './anchore-reports/'
+      TargetFolder: '$(Build.ArtifactStagingDirectory)/anchore-reports'
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Anchore Scan Reports'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/anchore-reports'
       
       
 
