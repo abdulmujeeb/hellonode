@@ -5,6 +5,6 @@ Nodejs express application
 docker build -t abdulmujeeb/hellonode .
 
 # Docker Image Run
-docker run abdulmujeeb/hellonode:latest --detach -p 4000:3000
+docker run -d -p 4000:3000 abdulmujeeb/hellonode:latest
 
 
