@@ -57,9 +57,21 @@ stages:
           tags: |
             $(tag)
 
-      - script: |
-          curl -s https://ci-tools.anchore.io/inline_scan-v0.4.1 | bash -s -- -p -r $(dockerImageName):$(tag)
-        displayName: 'Scan Docker Image for Vulnerabilities'
+#      - script: |
+#          curl -s https://ci-tools.anchore.io/inline_scan-v0.4.1 | bash -s -- -p -r $(dockerImageName):$(tag)
+#        displayName: 'Scan Docker Image for Vulnerabilities'
+#
+#      - task: CopyFiles@2
+#        displayName: Copy Anchore Scanner Reports
+#        inputs:
+#          SourceFolder: './anchore-reports/'
+#          TargetFolder: '$(Build.ArtifactStagingDirectory)/anchore-reports'
+#
+#      - task: PublishBuildArtifacts@1
+#        displayName: Publish Anchore Scanner Reports
+#        inputs:
+#          PathtoPublish: '$(Build.ArtifactStagingDirectory)/anchore-reports'
+
 
       - task: Docker@2
         displayName: Login to ACR
@@ -78,17 +90,6 @@ stages:
           containerRegistry: $(containerRegistry)
           tags: |
             $(tag)
-
-      - task: CopyFiles@2
-        displayName: Copy Anchore Scanner Reports
-        inputs:
-          SourceFolder: './anchore-reports/'
-          TargetFolder: '$(Build.ArtifactStagingDirectory)/anchore-reports'
-
-      - task: PublishBuildArtifacts@1
-        displayName: Publish Anchore Scanner Reports
-        inputs:
-          PathtoPublish: '$(Build.ArtifactStagingDirectory)/anchore-reports'
 
   - job: SASTScan
     displayName: SAST Scan
@@ -120,15 +121,6 @@ stages:
       - task: WhiteSource Bolt@19
         displayName: "Run OSS Scan using Whitesource Bolt"
 
-  - job: ContainerScan
-    displayName: Static Container Scanning
-    dependsOn:
-      - BuildContainer
-    steps:
-      - script: |
-          curl -s https://ci-tools.anchore.io/inline_scan-v0.4.1 | bash -s -- -p -r $(dockerImageName):$(tag)
-        displayName: 'Scan Docker Image for Vulnerabilities'
-
   - job: GenerateArtifacts
     displayName: Generate Artifacts
     dependsOn:
@@ -146,8 +138,6 @@ stages:
           archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
           replaceExistingArchive: true
       - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-        artifact: drop
-
 
       - task: PublishBuildArtifacts@1
         displayName: 'Publish the project -- Release'
