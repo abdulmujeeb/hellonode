@@ -42,6 +42,36 @@ stages:
         npm run test --if-present --reporter mocha-junit-reporter
       displayName: 'Run Mocha Unit Tests'
 
+  - job: SASTScan
+    displayName: SAST Scan
+    dependsOn:
+      - BuildCode
+    pool:
+      vmImage: $(vmImageName)
+
+    steps:
+      - task: SonarCloudPrepare@1
+        inputs:
+          SonarCloud: 'node-sast-scan'
+          organization: 'mjborg'
+          scannerMode: 'CLI'
+          configMode: 'manual'
+          cliProjectKey: 'node-sast-scan'
+          cliProjectName: 'node-sast-scan'
+          cliSources: '.'
+      - task: SonarCloudAnalyze@1
+        displayName: 'Run SonarCloud code analysis'
+      - task: SonarCloudPublish@1
+        displayName: 'Publish SonarCloud quality gate results'
+
+  - job: OpenSourceScan
+    displayName: Open Source Scan
+    dependsOn:
+      - BuildCode
+    steps:
+      - task: WhiteSource Bolt@19
+        displayName: "Run OSS Scan using Whitesource Bolt"
+
   - job: BuildContainer
     displayName: Build Scan and Push Docker Image
     dependsOn:
@@ -91,42 +121,14 @@ stages:
           tags: |
             $(tag)
 
-  - job: SASTScan
-    displayName: SAST Scan
-    dependsOn:
-      - BuildCode
-    pool:
-      vmImage: $(vmImageName)
-
-    steps:
-      - task: SonarCloudPrepare@1
-        inputs:
-          SonarCloud: 'node-sast-scan'
-          organization: 'mjborg'
-          scannerMode: 'CLI'
-          configMode: 'manual'
-          cliProjectKey: 'node-sast-scan'
-          cliProjectName: 'node-sast-scan'
-          cliSources: '.'
-      - task: SonarCloudAnalyze@1
-        displayName: 'Run SonarCloud code analysis'
-      - task: SonarCloudPublish@1
-        displayName: 'Publish SonarCloud quality gate results'
-
-  - job: OpenSourceScan
-    displayName: Open Source Scan
-    dependsOn:
-      - BuildCode
-    steps:
-      - task: WhiteSource Bolt@19
-        displayName: "Run OSS Scan using Whitesource Bolt"
-
   - job: GenerateArtifacts
     displayName: Generate Artifacts
     dependsOn:
       - BuildCode
       - SASTScan
       - OpenSourceScan
+
+
 
     steps:
 #      - task: ArchiveFiles@2
