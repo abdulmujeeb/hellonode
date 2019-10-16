@@ -22,8 +22,8 @@ steps:
         command: build
         Dockerfile: Dockerfile
         tags: |
-          $(tag)  
-        
+          $(tag)
+
 
   - script: |
         curl -s https://ci-tools.anchore.io/inline_scan-v0.4.1 | bash -s -- -p -r $(dockerImageName):$(tag)
@@ -36,7 +36,7 @@ steps:
       containerRegistry: $(containerRegistry)
 
   - script: |
-      docker tag $(dockerImageName):$(tag) $(containerRegistryURL)/$(dockerImageName):$(tag) 
+      docker tag $(dockerImageName):$(tag) $(containerRegistryURL)/$(dockerImageName):$(tag)
 
   - task: Docker@2
     displayName: Push Docker Image
@@ -45,10 +45,10 @@ steps:
         command: push
         containerRegistry: $(containerRegistry)
         tags: |
-          $(tag)  
-        
+          $(tag)
+
   - task: CopyFiles@2
-    displayName: Copy Anchore Scan Reports 
+    displayName: Copy Anchore Scan Reports
     inputs:
       SourceFolder: './anchore-reports/'
       TargetFolder: '$(Build.ArtifactStagingDirectory)/anchore-reports'
@@ -57,6 +57,6 @@ steps:
     displayName: 'Publish Anchore Scan Reports'
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)/anchore-reports'
-      
-      
+
+
 

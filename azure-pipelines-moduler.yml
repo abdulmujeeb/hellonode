@@ -86,22 +86,22 @@ stages:
           Dockerfile: Dockerfile
           tags: |
             $(tag)
-#
-#      - script: |
-#          curl -s https://ci-tools.anchore.io/inline_scan-v0.4.1 | bash -s -- -p -r $(dockerImageName):$(tag)
-#        displayName: 'Scan Docker Image for Vulnerabilities'
-#
-#      - task: CopyFiles@2
-#        displayName: Copy Anchore Scanner Reports
-#        inputs:
-#          SourceFolder: './anchore-reports/'
-#          TargetFolder: '$(Build.ArtifactStagingDirectory)/anchore-reports'
-#
-#      - task: PublishBuildArtifacts@1
-#        displayName: Publish Anchore Scanner Reports
-#        inputs:
-#          PathtoPublish: '$(Build.ArtifactStagingDirectory)/anchore-reports'
-#
+
+      - script: |
+          curl -s https://ci-tools.anchore.io/inline_scan-v0.4.1 | bash -s -- -p -r $(dockerImageName):$(tag)
+        displayName: 'Scan Docker Image for Vulnerabilities'
+
+      - task: CopyFiles@2
+        displayName: Copy Anchore Scanner Reports
+        inputs:
+          SourceFolder: './anchore-reports/'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)/anchore-reports'
+
+      - task: PublishBuildArtifacts@1
+        displayName: Publish Anchore Scanner Reports
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)/anchore-reports'
+
 
       - task: Docker@2
         displayName: Login to ACR
