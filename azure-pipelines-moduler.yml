@@ -14,8 +14,6 @@ variables:
   # Container Registry
   containerRegistry: 'Azure Registry'
 
-  containerRegistryURL: 'mjbacr.azurecr.io'
-
   # Docker Image Tag
   tag: v1
 
@@ -70,7 +68,7 @@ stages:
           containerRegistry: $(containerRegistry)
 
       - script: |
-          docker tag $(dockerImageName):$(tag) $(containerRegistryURL)/$(dockerImageName):$(tag)
+          docker tag $(dockerImageName):$(tag) $(CONTAINER-REGISTRY-URL)/$(dockerImageName):$(tag)
 
       - task: Docker@2
         displayName: Push Docker Image
