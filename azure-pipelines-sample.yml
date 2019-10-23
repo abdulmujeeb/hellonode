@@ -1,0 +1,22 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- master
+
+variables:
+  vmImageName: 'ubuntu-latest'
+
+steps:
+
+  - script: docker run --rm -i hadolint/hadolint < Dockerfile
+    displayName: 'Dockerfile Linting'
+
+  - script: docker run --rm -i secfigo/trufflehog --fail_code yes file:///
+    displayName: 'Scan for Secrets in the code'
+
+
+
+

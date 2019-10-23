@@ -23,6 +23,8 @@ app.set('view engine', 'ejs');
 // Store some value locally
 // window.localStorage.setItem("token", "123456");
 
+const testPassword = 'Admin@12345';
+
 
 app.get('/', (req, res) => {
 
