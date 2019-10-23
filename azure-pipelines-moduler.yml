@@ -61,8 +61,8 @@ stages:
           cliSources: '.'
       - task: SonarCloudAnalyze@1
         displayName: 'Run SonarCloud code analysis'
-      - task: SonarCloudPublish@1
-        displayName: 'Publish SonarCloud quality gate results'
+#      - task: SonarCloudPublish@1
+#        displayName: 'Publish SonarCloud quality gate results'
 
   - job: OpenSourceScan
     displayName: Open Source Scan

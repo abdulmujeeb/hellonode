@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
 	}
 
   //res.sendFile(path.join(__dirname, 'views', 'index.html'));
-  res.render('index', { title: 'Azure Enthusiasts -- ', result: division});
+  res.render('index', { title: 'Welcom Azure Enthusiasts ! ', result: division});
 });
 
 app.listen(port, () => {
